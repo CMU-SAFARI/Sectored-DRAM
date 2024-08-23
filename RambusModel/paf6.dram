@@ -1,0 +1,207 @@
+# DRAM description for architecture, power and performance model
+
+# Device: Reference DDR3 2G 55nm
+
+# End User License Agreement for Software:
+# 
+# Copyright � 2010 Rambus Inc.  All Rights Reserved.
+# 
+# Use and modification of the software by the recipient is permitted.
+# Redistribution of the software to any third party is not permitted without
+# the express written authorization of Rambus Inc.
+# Rambus Inc. has no obligation to provide any training for the software,
+# or to correct any bugs, defects or errors, or to otherwise support, develop
+# or maintain the software.
+# 
+# THE SOFTWARE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND, EITHER
+# EXPRESS OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+# OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, OR NONINFRINGEMENT,
+# WHICH WARRANTIES ARE EXPRESSLY DISCLAIMED.  THE SOFTWARE MAY INCLUDE
+# TECHNICAL INACCURACIES OR OTHER ERRORS.  RAMBUS INC. RESERVES THE RIGHT
+# TO MAKE CHANGES TO THE SOFTWARE WITHOUT OBLIGATION TO NOTIFY ANY PERSON
+# OR ORGANIZATION.  SUCH CHANGES MAY, AT RAMBUS INC.'S DISCRETION, BE
+# INCORPORATED IN NEW VERSIONS OF THE SOFTWARE.  RAMBUS INC. MAY MAKE
+# IMPROVEMENTS AND/OR CHANGES TO THE TECHNOLOGY DESCRIBED IN THE SOFTWARE
+# AT ANY TIME.
+# 
+# IN NO EVENT WILL RAMBUS INC. OR ITS AFFILIATES BE LIABLE FOR ANY DIRECT,
+# INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY OR CONSEQUENTIAL DAMAGES,
+# HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+# STRICT LIABILITY OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING 
+# IN ANY WAY OUT OF THE USE OF THE SOFTWARE, EVEN IF ADVISED OF THE POSSIBLITY
+# OF SUCH DAMAGE.
+# 
+# Rambus Inc. may have patents, patent applications, trademarks, copyrights,
+# or other intellectual property rights covering the contents of the software,
+# and Rambus Inc. and its licensors retain all right, title, and interest in
+# and to such intellectual property rights.  Except as expressly provided in
+# a written agreement between you and Rambus Inc., the furnishing of the
+# software does not grant you any license, express or implied, to any such
+# patents, patent applications, trademarks, copyrights, or other intellectual
+# property of Rambus Inc.
+# 
+# "XDR�" and "Rambus" are trademarks or registered trademarks of Rambus Inc.
+# protected by the laws of the United States or other countries.  
+# 
+# For additional information, please contact:
+# Rambus Inc.
+# 1050 Enterprise Way, Suite 700
+# Sunnyvale, CA 94089
+# 408-462-8000
+
+# Section: Description of physical layout
+# -----------------------------------------
+
+FloorplanPhysical
+
+# Arrangement of blocks (starting in lower left corner)
+
+# Array information
+CellArray BL=v BitsPerBL=512 CellsPerSWL=341 BLtype=open CslBlocks=1
+CellArray WLpitch=165nm BLpitch=110nm SenseampWidth=19um SWLdriverWidth=9um
+
+Horizontal blocks = A1 P1 P1 A1 A1 P1 P1 A1
+# A1: array block
+# P1: row drivers
+
+Vertical blocks = A1 P1 P2 P1 A1
+# A1: array block
+# P1: column driver and core data path
+# P2: main periphery logic and pads
+
+# Block sizes
+SizeHorizontal A1=2244um P1=120um
+SizeVertical A1=3396um P1=200um P2=530um
+
+# Section: Description of signal wiring
+# ---------------------------------------
+
+FloorplanSignaling
+
+# Core boundary in data path
+CoreBoundary Read=3 Write=4 # last respectively first segment considered to be in core
+
+# Write data path
+DataW0 inside=0_2 fraction=5% direction=v mux=1:4 PchW=19.2 NchW=9.6 Toggle=50%
+DataW1 inside=0_2 fraction=25% direction=h Toggle=50%
+DataW2 start=0_2 end=6_2 mux=1:2 PchW=19.2 NchW=9.6 Toggle=50%
+DataW3 start=6_2 end=6_3 Toggle=50%
+DataW4 start=6_3 end=7_3 PchW=19.2 NchW=9.6 Toggle=50%
+DataW5 start=7_3 end=7_4
+DataW6 inside=7_4 fraction=50% direction=v
+
+# Read data path
+DataR0 inside=7_4 fraction=50% direction=v swing=1.0V
+DataR1 start=7_4 end=7_3 swing=1.0V PchW=19.2 NchW=9.6
+DataR2 start=7_3 end=6_3 Toggle=50%
+DataR3 start=6_3 end=6_2 PchW=19.2 NchW=9.6 mux=2:1 Toggle=50%
+DataR4 start=6_2 end=0_2 PchW=19.2 NchW=9.6 Toggle=50%
+DataR5 inside=0_2 fraction=25% direction=h mux=4:1 Toggle=50%
+DataR6 inside=0_2 fraction=5% direction=v Toggle=50%
+
+# Row address path
+Rowadd0 start=4_2 end=1_2 PchW=19.2 NchW=9.6
+Rowadd1 start=1_2 end=1_4 PchW=19.2 NchW=9.6
+Rowadd2 inside=1_4 fraction=50% direction=v PchW=19.2 NchW=9.6
+
+# Column address path
+Coladd0 start=4_2 end=2_2 PchW=19.2 NchW=9.6
+Coladd1 start=2_2 end=2_3 PchW=19.2 NchW=9.6
+Coladd2 start=2_3 end=3_3
+Coladd2 inside=3_3 fraction=50% direction=h
+
+# Bank address path
+Bankadd0 start=4_2 end=1_2 PchW=19.2 NchW=9.6
+Bankadd1 start=1_2 end=1_3
+
+# Control path
+Control0 inside=7_2 fraction=50% direction=h
+Control1 start=7_2 end=0_2 PchW=19.2 NchW=9.6
+Control2 inside=0_2 fraction=50% direction=h
+
+# Clock path
+Clock0 inside=7_2 fraction=50% direction=h
+Clock1 start=7_2 end=0_2 PchW=19.2 NchW=9.6
+Clock2 inside=0_2 fraction=50% direction=h
+
+# Section: Description of specification (data sheet)
+# --------------------------------------------------
+
+Specification
+ 
+IO width=8 datarate=2.4Gbps
+Dataclock number=1 frequency=1200MHz
+# Modify coladd as we activate a smaller number of cells per act
+# TODO: better implementation is to modify the script where
+# it calculates row activation and row idle energy by multiplying
+# those by a constant we define here: e.g., partialfactor=0.125
+# Make sure to keep other parameters int
+# increase misc. by 8 bits (these are the control signals)
+Control frequency=1200MHz bankadd=4 rowadd=14 coladd=10 miscellaneous=6 pafactor=0.75
+#Control frequency=1200MHz bankadd=4 rowadd=14 coladd=10 miscellaneous=14 pafactor=1
+#Control frequency=800MHz bankadd=3 rowadd=14 coladd=7 miscellaneous=6
+ 
+# Section: Description of technology related parameters
+# -----------------------------------------------------
+
+Technology
+
+Oxide_Main t=26A
+Oxide_HV t=49A
+Oxide_Array t=49A
+Transistor_Main Lmin=0.08um csd=0.8fF/um
+Transistor_HV Lmin=0.27um csd=0.8fF/um
+Transistor_Array L=0.085um W=0.055um
+Array Cbl=85fF Cs=24fF Cshare_BL_SWL=30% BitsPerCsl=4 # Cell and bitline
+# https://www.fujitsu.com/us/Images/65nmProcessTechnology.pdf, assume 65 nm and gate length = 0.1 um, AND gate needs 6 transistors
+# we pessimistically double the area of MWL drivers
+## Pessimistic assumption
+Array MWLwireCap=0.6pF/mm MWLpredecode=8 MWLdecNchW=1.30um MWLdecPchW=3.70um MWLdecToggle=50% # MWL
+# Array MWLwireCap=0.3pF/mm MWLpredecode=8 MWLdecNchW=0.80um MWLdecPchW=2.00um MWLdecToggle=50% # MWL
+# Array MWLwireCap=0.3pF/mm MWLpredecode=8 MWLdecNchW=0.65um MWLdecPchW=1.85um MWLdecToggle=50% # MWL
+Array WLctrlLoadNchW=3.2um WLctrlLoadPchW=6.4um SWLdrvNchW=1.9um SWLdrvPchW=5.4um SWLrstNchW=1.4um SWLwireCap=0.3pF/mm # SWL
+Array SAnchW=1.9um SApchW=1.33um SAnchL=0.16um SApchL=0.16um SAeqlW=0.9um SAeqlL=0.16um SAbswW=1.9um SAbswL=0.08um # sense-amp
+Array SAnsetW=0.22um SAnsetL=0.27um SApsetW=0.22um SApsetL=0.27um # SA set devices
+BEOL CperiWire=0.25pF/mm
+Leakage SD_Main=3nA/um Gate_Main=0.1nA/um2 GIDL_HV_nch=0.6nA/um GIDL_HV_pch=0.005nA/um
+Leakage column_width=8.5um MWLdrvNchw=8.5um BLjunction=27fA/cell
+
+# Section: Description of basic electrical parameters
+# -----------------------------------------------------
+
+BasicElectrical
+
+Voltages Vcc=1.5V Vperi=1.3V Varray=1.2V Vpp=2.9V
+Efficiency Vperi=100% Varray=100% Vpp=37%
+
+# Section: Peripheral logic
+# -------------------------
+
+Periphery
+
+# 31 gates for a flip flop (for the sector latch) * 8 = 248 new gates per row activation
+Logic0 Gates=448 NchW=3.2um PchW=6.4um DevicesPerGate=4 AreaFactor=10% WireFactor=33% Operation=row Component=control
+#Logic0 Gates=264 NchW=3.2um PchW=6.4um DevicesPerGate=4 AreaFactor=10% WireFactor=33% Operation=row Component=control
+Logic1 Gates=200 NchW=3.2um PchW=6.4um DevicesPerGate=4 AreaFactor=10% WireFactor=33% Operation=readwrite Component=control
+Logic2 Gates=500 NchW=3.2um PchW=6.4um DevicesPerGate=4 AreaFactor=10% WireFactor=33% Operation=readwrite Component=column
+Logic3 Gates=600 NchW=3.2um PchW=6.4um DevicesPerGate=3 AreaFactor=10% WireFactor=33% Operation=readwrite Component=data
+Logic4 Gates=200 NchW=3.2um PchW=6.4um DevicesPerGate=3 AreaFactor=10% WireFactor=33% Operation=readwrite Component=control
+#Logic4 Gates=264 NchW=3.2um PchW=6.4um DevicesPerGate=3 AreaFactor=10% WireFactor=33% Operation=readwrite Component=control
+Logic5 Gates=200 NchW=3.2um PchW=6.4um DevicesPerGate=3 AreaFactor=10% WireFactor=33% Operation=all Component=control
+Sink0 Vcc=30mA
+
+# Section: Description of global loop variables
+# ---------------------------------------------
+
+GlobalLoop
+Type Dimension=one
+
+# PA: adjusted for 2400 MT/s
+
+Loop0 Section=Specification Key=Pattern Subkey=loop Value=list \
+  act pre nop nop nop nop nop nop nop nop nop nop nop nop nop nop nop nop nop nop nop nop nop nop nop nop nop nop nop nop nop \
+                    nop nop nop nop nop nop nop nop nop nop nop nop nop nop nop nop nop nop nop nop nop, \ # Idd0
+   rd nop nop nop, \                                                                                                                # Idd4R
+  wrt nop nop nop, \                                                                                                                # Idd4W
+#   rd act pre nop  rd act pre nop  rd act pre nop  rd act pre nop  rd nop nop nop  rd nop nop nop  rd nop nop nop  rd nop nop nop, \# Idd7R
+#  wrt act pre nop  rd act pre nop wrt act pre nop  rd act pre nop wrt nop nop nop  rd nop nop nop wrt nop nop nop  rd nop nop nop   # Idd7RW
